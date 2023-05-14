@@ -1,15 +1,37 @@
-let richTextBtns = document.querySelectorAll(".btn__richtext__ui");
-const richTextOperations = {
-  bold: ".text-is-bolded",
-  emphasis: ".text-is-emphasized",
-  underline: ".text-is-underlined",
-  strikethrough: ".text-is-stricken",
-};
+let inputPostTitleEl = document.querySelector("#input__post__title");
+let textareaPostBodyEl = document.querySelector("#textarea__post");
+let formEl = document.querySelector("#form__new__edit__post");
 
-richTextBtns.forEach((btn) =>
-  addEventListener("click", (e) => {
-    let classToApply = richTextOperations[e.target.id.split("_").pop()];
-    console.log(classToApply);
-  })
-);
+let testingURL = "http://localhost:7000/";
 
+formEl.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  // TESTING STATE
+  // NOT CHECKING FOR VALID DATA, ETC
+  let postTitle = inputPostTitleEl.value;
+  let postBody = textareaPostBodyEl.value;
+
+  if (postTitle !== "" && postBody !== "") {
+    // let data = new FormData(formEl);
+
+    let postJSON = JSON.stringify({
+      postTitle,
+      postBody,
+    });
+
+    try {
+      let res = await fetch(testingURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: postJSON,
+      });
+
+      // TODO: This should re-direct to the newly created post
+      if (res.ok) console.log("posted successfully!");
+    } catch (e) {
+      console.error("Failed to submit post. Please try again.");
+    }
+  }
+});

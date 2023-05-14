@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./styles/main.css" />
-    <script defer src="./scripts/index.js"></script>
+    <script defer src="./scripts/index.js" type="module"></script>
     <title>Mano e Machina Post Creator (pre-alpha)</title>
   </head>
   <body>
     <div id="container__page">
-      <form action="" id="form__new__edit__post">
+      <form id="form__new__edit__post">
         <input
           type="text"
           name="input__post__title"
@@ -23,10 +23,10 @@
           autocomplete="off"
           placeholder="New Blog Post"
         ></textarea>
-        <input type="submit" id="submit__button" value="Submit Post" />
+        <input type="submit" id="submit__post__button" value="Submit Post" />
       </form>
       <div class="container__richtext__icons" id="container__richtext__icons">
-        <button class="btn__richtext__ui" id="btn__set__bold" >B</button>
+        <button class="btn__richtext__ui" id="btn__set__bold">B</button>
         <button class="btn__richtext__ui" id="btn__set__emphasis">I</button>
         <button class="btn__richtext__ui" id="btn__set__underline">U</button>
         <button class="btn__richtext__ui" id="btn__set__strikethrough">
