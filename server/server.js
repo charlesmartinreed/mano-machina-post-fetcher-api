@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const Post = require("../classes/Post");
 
 const PORT = process.env.PORT || 7000;
 app.use(express.json());
