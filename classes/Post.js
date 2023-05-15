@@ -3,7 +3,7 @@ module.exports = class Post {
     this.postTitle = postTitle;
     this.postBody = postBody;
     this.postId = this.getPostId();
-    this.postTimestamp = new Date();
+    this.postTimestamp = this.getTimestamp();
   }
 
   #setPostId = (idLen = 16) => {
@@ -33,7 +33,18 @@ module.exports = class Post {
     return generatedIDValues.join("");
   };
 
+  #setPostTimestamp = () => {
+    let currentDateArr = String(new Date()).split(" ");
+    let [day, month, date, year, time] = currentDateArr;
+
+    return `${day}day, ${month} ${date}, ${year}, ${time}`;
+  };
+
   getPostId() {
     return this.#setPostId();
+  }
+
+  getTimestamp() {
+    return this.#setPostTimestamp();
   }
 };
