@@ -10,7 +10,7 @@ let richTextButtonState = {
   set_strike: { state: false, cssClass: "text-is-stricken" },
 };
 
-let richTextActiveClasses = ``;
+let richTextActiveClasses = [];
 let testingURL = "http://localhost:7000/api";
 let textAreaBody = ``;
 
@@ -53,37 +53,47 @@ btnsRichTextEls.forEach((btn) => {
     btn.setAttribute("data-is-active", btn.classList.contains("active"));
 
     updateRichTextOperation(
+      btn,
       btn.getAttribute("data-rich-text-operation"),
       btn.classList.contains("active")
     );
   });
 });
 
-function updateRichTextOperation(operation, updatedState) {
+function updateRichTextOperation(eventTarget, operation, updatedState) {
   let { cssClass } = richTextButtonState[operation];
 
   richTextButtonState[operation].state = updatedState;
 
-  // console.log(cssClass);
-  console.log(richTextButtonState[operation]);
+  if (richTextButtonState[operation].state === true) {
+    const eventRichTextBtnEnabled = new CustomEvent("richTextBtnEnabled", {
+      detail: eventTarget.getAttribute("data-rich-text-operation"),
+    });
 
-  if (richTextButtonState[operation].state === true)
-    openRichTextPortion(cssClass);
+    window.dispatchEvent(eventRichTextBtnEnabled);
+  }
 
-  if (richTextButtonState[operation].state === false) closeRichTextPortion();
-
-  console.log("current textbody", textAreaBody);
+  if (richTextButtonState[operation].state === false) {
+    const eventRichTextBtnDisabled = new CustomEvent("richTextBtnDisabled", {
+      detail: eventTarget.getAttribute("data-rich-text-operation"),
+    });
+    window.dispatchEvent(eventRichTextBtnDisabled);
+  }
 }
 
 function openRichTextPortion(cssClass) {
-  richTextActiveClasses += `${cssClass} `;
+  console.log("opening rich text tags");
+  richTextActiveClasses = [...richTextActiveClasses, cssClass];
+  console.log("active classes", richTextActiveClasses);
 
-  let spanNodes = Array.from(textareaPostBodyEl.children).filter((node) =>
-    node.classList.contains("span__rich__text__container")
-  );
+  // richTextActiveClasses += `${cssClass} `;
 
-  if (spanNodes.length === 0) {
-  }
+  // let spanNodes = Array.from(textareaPostBodyEl.children).filter((node) =>
+  //   node.classList.contains("span__rich__text__container")
+  // );
+
+  // if (spanNodes.length === 0) {
+  // }
 
   // for (const children of textareaPostBodyEl) {
   //   if (children.length === 0) {
@@ -97,16 +107,28 @@ function openRichTextPortion(cssClass) {
   // let openTag = `<span id="span__rich__text__container" class=${richTextActiveClasses}>`;
 }
 
-function closeRichTextPortion() {
-  let closeTag = `</span>`;
-  textAreaBody += closeTag;
+function closeRichTextPortion(cssClass) {
+  console.log("closing rich text tags");
+  richTextActiveClasses = richTextActiveClasses.filter(
+    (classAtIdx) => classAtIdx !== cssClass
+  );
+  console.log("active classes", richTextActiveClasses);
 }
+
+window.addEventListener("richTextBtnEnabled", (e) => {
+  openRichTextPortion(e.detail);
+});
+
+window.addEventListener("richTextBtnDisabled", (e) => {
+  closeRichTextPortion(e.detail);
+});
 
 textareaPostBodyEl.addEventListener("focus", (e) => {
   textareaPostBodyEl.addEventListener("keydown", (e) => {
     if (e.code.includes("Key")) {
-      textAreaBody += e.key;
-      console.log("current textareabody html", textAreaBody);
+      textareaPostBodyEl.textContent += e.key;
+      console.log("current textareabody html", textareaPostBodyEl.textContent);
+      // check for existing span element
     }
   });
 });
