@@ -27,3 +27,8 @@ app.post("/", (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server now running on PORT ${PORT}`));
+
+let newPost = new Post("Test", "Body test");
+
+console.log(newPost);
+// console.log(String.fromCharCode(57));
