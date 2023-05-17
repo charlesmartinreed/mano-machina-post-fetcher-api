@@ -11,7 +11,7 @@ let richTextButtonState = {
 };
 
 let richTextActiveClasses = ``;
-let testingURL = "http://localhost:7000/";
+let testingURL = "http://localhost:7000/api";
 let textAreaBody = ``;
 
 formEl.addEventListener("submit", async (e) => {
@@ -79,12 +79,11 @@ function openRichTextPortion(cssClass) {
   richTextActiveClasses += `${cssClass} `;
 
   let spanNodes = Array.from(textareaPostBodyEl.children).filter((node) =>
-  node.classList.contains("span__rich__text__container")
-);
+    node.classList.contains("span__rich__text__container")
+  );
 
-if (spanNodes.length === 0) {
-
-}
+  if (spanNodes.length === 0) {
+  }
 
   // for (const children of textareaPostBodyEl) {
   //   if (children.length === 0) {

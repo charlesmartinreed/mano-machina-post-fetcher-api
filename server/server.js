@@ -4,10 +4,15 @@ const app = express();
 const Post = require("../classes/Post");
 
 const PORT = process.env.PORT || 7000;
+app.use(express.static("pages"));
 app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
+  res.sendFile("index.html", { root: "pages" });
+});
+
+app.get("/api", (req, res) => {
   return res.status(200).json({ msg: "You made it to the endpoint" });
 });
 
@@ -27,8 +32,3 @@ app.post("/", (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server now running on PORT ${PORT}`));
-
-let newPost = new Post("Test", "Body test");
-
-console.log(newPost);
-// console.log(String.fromCharCode(57));
