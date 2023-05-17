@@ -1,17 +1,18 @@
 const inputPostTitleEl = document.querySelector("#input__post__title");
 const textareaPostBodyEl = document.querySelector("#textarea__post");
 const formEl = document.querySelector("#form__new__edit__post");
-
 const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
+
 let richTextButtonState = {
-  set_bold: false,
-  set_emphasis: false,
-  set_underline: false,
-  set_strike: false,
+  set_bold: { state: false, cssClass: "text-is-bolded" },
+  set_emphasis: { state: false, cssClass: "text-is-emphasized" },
+  set_underline: { state: false, cssClass: "text-is-underlined" },
+  set_strike: { state: false, cssClass: "text-is-stricken" },
 };
 
+let richTextActiveClasses = ``;
 let testingURL = "http://localhost:7000/";
-let textAreaBody = "";
+let textAreaBody = ``;
 
 formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -59,14 +60,54 @@ btnsRichTextEls.forEach((btn) => {
 });
 
 function updateRichTextOperation(operation, updatedState) {
-  richTextButtonState[operation] = updatedState;
+  let { cssClass } = richTextButtonState[operation];
 
-  console.log(richTextButtonState);
+  richTextButtonState[operation].state = updatedState;
+
+  // console.log(cssClass);
+  console.log(richTextButtonState[operation]);
+
+  if (richTextButtonState[operation].state === true)
+    openRichTextPortion(cssClass);
+
+  if (richTextButtonState[operation].state === false) closeRichTextPortion();
+
+  console.log("current textbody", textAreaBody);
 }
 
-// textareaPostBodyEl.addEventListener("focus", (e) => {
-//   textareaPostBodyEl.addEventListener("keydown", (e) => {
-//     textAreaBody = e.target.value;
-//     console.log("current textareabody", textAreaBody);
-//   });
-// });
+function openRichTextPortion(cssClass) {
+  richTextActiveClasses += `${cssClass} `;
+
+  let spanNodes = Array.from(textareaPostBodyEl.children).filter((node) =>
+  node.classList.contains("span__rich__text__container")
+);
+
+if (spanNodes.length === 0) {
+
+}
+
+  // for (const children of textareaPostBodyEl) {
+  //   if (children.length === 0) {
+  //     let openTag = document.querySelector(`#span__rich__text__container__0`)
+  //   } else {
+  //     let childCount
+  //   }
+  // }
+
+  // let openTag = document.querySelector('#span__rich__text__container') ??
+  // let openTag = `<span id="span__rich__text__container" class=${richTextActiveClasses}>`;
+}
+
+function closeRichTextPortion() {
+  let closeTag = `</span>`;
+  textAreaBody += closeTag;
+}
+
+textareaPostBodyEl.addEventListener("focus", (e) => {
+  textareaPostBodyEl.addEventListener("keydown", (e) => {
+    if (e.code.includes("Key")) {
+      textAreaBody += e.key;
+      console.log("current textareabody html", textAreaBody);
+    }
+  });
+});
