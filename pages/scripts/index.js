@@ -138,6 +138,8 @@ window.addEventListener("richTextBtnDisabled", (e) => {
 });
 
 window.addEventListener("keydown", (e) => {
+  console.log("keydown detected");
+
   if (pressedKeys.length === 2) {
     pressedKeys[0] = pressedKeys.pop();
   }
@@ -146,16 +148,13 @@ window.addEventListener("keydown", (e) => {
 
   let [keyA, keyB] = pressedKeys;
 
-  if (keyA !== "Control" || keyA !== "Command") {
+  if (keyA !== "Control") {
     return;
   }
 
   // Both ctrl+u & ctrl+s have browser/OS specific behavior
   // that I wouldn't normally override, but I'll make an exception for this project
-  if (
-    (keyA === "Control" && pressedKeys.length === 2) ||
-    (keyA === "Command" && pressedKeys.length === 2)
-  ) {
+  if (keyA === "Control" && pressedKeys.length === 2) {
     let btn;
 
     switch (keyB) {
