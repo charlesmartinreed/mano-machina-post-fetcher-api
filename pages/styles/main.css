@@ -74,22 +74,18 @@ form > * {
   cursor: pointer;
 }
 
-#container__richtext__icons #btn__set__bold,
 .text-is-bolded {
   font-weight: 900;
 }
 
-#container__richtext__icons #btn__set__emphasis,
 .text-is-emphasized {
   font-style: italic;
 }
 
-#container__richtext__icons #btn__set__underline,
 .text-is-underlined {
   text-decoration: underline;
 }
 
-#container__richtext__icons #btn__set__strikethrough,
 .text-is-stricken {
   text-decoration: line-through;
 }

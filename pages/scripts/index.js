@@ -10,9 +10,19 @@ let richTextButtonState = {
   set_strike: { state: false, cssClass: "text-is-stricken" },
 };
 
+window.addEventListener("DOMContentLoaded", (e) => {
+  // let p = document.createElement("p");
+  // p.classList.add("text-is-bolded", "text-is-emphasized");
+  // p.textContent = "Bolded text here.";
+  // formEl.appendChild(p);
+  // console.log(textareaPostBodyEl.innerHTML);
+});
+
 let richTextActiveClasses = [];
 let testingURL = "http://localhost:7000/api";
 let textAreaBody = ``;
+
+let pressedKeys = [];
 
 formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -48,17 +58,21 @@ formEl.addEventListener("submit", async (e) => {
 
 btnsRichTextEls.forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    btn.classList.toggle("active");
-
-    btn.setAttribute("data-is-active", btn.classList.contains("active"));
-
-    updateRichTextOperation(
-      btn,
-      btn.getAttribute("data-rich-text-operation"),
-      btn.classList.contains("active")
-    );
+    triggerRichTextOperationFor(btn);
   });
 });
+
+function triggerRichTextOperationFor(btn) {
+  btn.classList.toggle("active");
+
+  btn.setAttribute("data-is-active", btn.classList.contains("active"));
+
+  updateRichTextOperation(
+    btn,
+    btn.getAttribute("data-rich-text-operation"),
+    btn.classList.contains("active")
+  );
+}
 
 function updateRichTextOperation(eventTarget, operation, updatedState) {
   let { cssClass } = richTextButtonState[operation];
@@ -123,12 +137,61 @@ window.addEventListener("richTextBtnDisabled", (e) => {
   closeRichTextPortion(e.detail);
 });
 
+window.addEventListener("keydown", (e) => {
+  if (pressedKeys.length === 2) {
+    pressedKeys[0] = pressedKeys.pop();
+  }
+
+  pressedKeys.push(e.key);
+
+  let [keyA, keyB] = pressedKeys;
+
+  if (keyA !== "Control" || keyA !== "Command") {
+    return;
+  }
+
+  // Both ctrl+u & ctrl+s have browser/OS specific behavior
+  // that I wouldn't normally override, but I'll make an exception for this project
+  if (
+    (keyA === "Control" && pressedKeys.length === 2) ||
+    (keyA === "Command" && pressedKeys.length === 2)
+  ) {
+    let btn;
+
+    switch (keyB) {
+      case "b":
+      case "B":
+        btn = document.querySelector("#btn__set__bold");
+        break;
+      case "i":
+      case "I":
+        btn = document.querySelector("#btn__set__emphasis");
+        break;
+      case "u":
+      case "U":
+        e.preventDefault();
+        btn = document.querySelector("#btn__set__underline");
+        break;
+      case "s":
+      case "S":
+        e.preventDefault();
+        btn = document.querySelector("#btn__set__strikethrough");
+        break;
+      default:
+        break;
+    }
+    triggerRichTextOperationFor(btn);
+  } else {
+    return;
+  }
+});
+
 textareaPostBodyEl.addEventListener("focus", (e) => {
   textareaPostBodyEl.addEventListener("keydown", (e) => {
-    if (e.code.includes("Key")) {
-      textareaPostBodyEl.textContent += e.key;
-      console.log("current textareabody html", textareaPostBodyEl.textContent);
-      // check for existing span element
-    }
+    // if (e.code.includes("Key")) {
+    //   // textareaPostBodyEl.textContent += e.key;
+    //   // console.log("current textareabody html", textareaPostBodyEl.textContent);
+    //   // check for existing span element
+    // }
   });
 });
