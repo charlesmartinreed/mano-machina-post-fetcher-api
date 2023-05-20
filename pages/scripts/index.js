@@ -3,17 +3,7 @@ const divPostBodyEl = document.querySelector("#div__post__body");
 const btnSubmitEl = document.querySelector("#submit__post__button");
 const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
 
-let richTextButtonState = {
-  set_bold: { state: false, cssClass: "text-is-bolded" },
-  set_emphasis: { state: false, cssClass: "text-is-emphasized" },
-  set_underline: { state: false, cssClass: "text-is-underlined" },
-  set_strike: { state: false, cssClass: "text-is-stricken" },
-};
-
-let richTextActiveClasses = [];
 let testingURL = "http://localhost:7000/api";
-let textAreaBody = ``;
-
 let pressedKeys = [];
 
 btnSubmitEl.addEventListener("click", async (e) => {
@@ -24,8 +14,6 @@ btnSubmitEl.addEventListener("click", async (e) => {
   let postBody = divPostBodyEl.innerHTML;
 
   if (postTitle !== "" && postBody !== "") {
-    // let data = new FormData(formEl);
-
     let postJSON = JSON.stringify({
       postTitle,
       postBody,
@@ -54,34 +42,38 @@ btnsRichTextEls.forEach((btn) => {
   });
 });
 
-function triggerRichTextOperationFor(btn) {
-  btn.classList.toggle("active");
+function triggerRichTextOperationFor(eventTarget) {
+  let richTextButtonState = {
+    set_bold: { state: false, style: "font-weight: 900" },
+    set_emphasis: { state: false, style: "font-style: italic" },
+    set_underline: {
+      state: false,
+      style: "border-bottom: 2px solid rgba(24, 24, 24, 1)",
+    },
+    set_strike: { state: false, style: "text-decoration: line-through" },
+  };
 
-  btn.setAttribute("data-is-active", btn.classList.contains("active"));
+  eventTarget.classList.toggle("active");
+  let updatedState = eventTarget.classList.contains("active");
+  eventTarget.setAttribute("data-is-active", updatedState);
 
-  updateRichTextOperation(
-    btn,
-    btn.getAttribute("data-rich-text-operation"),
-    btn.classList.contains("active")
-  );
-}
+  let operation = eventTarget.getAttribute("data-rich-text-operation");
 
-function updateRichTextOperation(eventTarget, operation, updatedState) {
-  let { cssClass } = richTextButtonState[operation];
-
+  let { style } = richTextButtonState[operation];
   richTextButtonState[operation].state = updatedState;
 
-  if (richTextButtonState[operation].state === true) {
+  if (updatedState === true) {
     const eventRichTextBtnEnabled = new CustomEvent("richTextBtnEnabled", {
-      detail: eventTarget.getAttribute("data-rich-text-operation"),
+      detail: style,
     });
 
     window.dispatchEvent(eventRichTextBtnEnabled);
   }
 
-  if (richTextButtonState[operation].state === false) {
+  // richTextButtonState[operation].state === false
+  if (updatedState === false) {
     const eventRichTextBtnDisabled = new CustomEvent("richTextBtnDisabled", {
-      detail: eventTarget.getAttribute("data-rich-text-operation"),
+      detail: style,
     });
     window.dispatchEvent(eventRichTextBtnDisabled);
   }
@@ -89,36 +81,18 @@ function updateRichTextOperation(eventTarget, operation, updatedState) {
 
 function openRichTextPortion(cssClass) {
   console.log("opening rich text tags");
-  richTextActiveClasses = [...richTextActiveClasses, cssClass];
-  console.log("active classes", richTextActiveClasses);
-
-  // richTextActiveClasses += `${cssClass} `;
-
-  // let spanNodes = Array.from(divPostBodyEl.children).filter((node) =>
-  //   node.classList.contains("span__rich__text__container")
-  // );
-
-  // if (spanNodes.length === 0) {
-  // }
-
-  // for (const children of divPostBodyEl) {
-  //   if (children.length === 0) {
-  //     let openTag = document.querySelector(`#span__rich__text__container__0`)
-  //   } else {
-  //     let childCount
-  //   }
-  // }
-
-  // let openTag = document.querySelector('#span__rich__text__container') ??
-  // let openTag = `<span id="span__rich__text__container" class=${richTextActiveClasses}>`;
+  console.log("active classes", checkForOpenRichTextClasses());
 }
 
 function closeRichTextPortion(cssClass) {
   console.log("closing rich text tags");
-  richTextActiveClasses = richTextActiveClasses.filter(
-    (classAtIdx) => classAtIdx !== cssClass
+  console.log("active classes", checkForOpenRichTextClasses());
+}
+
+function checkForOpenRichTextClasses() {
+  return Array.from(btnsRichTextEls).filter(
+    (btnEl) => btnEl.getAttribute("data-is-active") === "true"
   );
-  console.log("active classes", richTextActiveClasses);
 }
 
 window.addEventListener("richTextBtnEnabled", (e) => {
