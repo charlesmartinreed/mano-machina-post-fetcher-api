@@ -95,6 +95,10 @@ function checkForOpenRichTextClasses() {
   );
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  recallPostFromLocalStorage();
+});
+
 window.addEventListener("richTextBtnEnabled", (e) => {
   openRichTextPortion(e.detail);
 });
@@ -152,11 +156,51 @@ window.addEventListener("keydown", (e) => {
 });
 
 divPostBodyEl.addEventListener("focus", (e) => {
+  let typingTimer;
+  let payload;
+
   divPostBodyEl.addEventListener("keydown", (e) => {
-    // if (e.code.includes("Key")) {
-    //   // textareaPostBodyEl.textContent += e.key;
-    //   // console.log("current textareabody html", textareaPostBodyEl.textContent);
-    //   // check for existing span element
-    // }
+    if (typingTimer) window.clearTimeout(typingTimer);
+    payload = divPostBodyEl.innerHTML;
+  });
+
+  divPostBodyEl.addEventListener("keyup", (e) => {
+    if (typingTimer) window.clearTimeout(typingTimer);
+    typingTimer = window.setTimeout(async () => {
+      // console.log("payload is", payload);
+      await writeToLocalStorage(payload);
+    }, 1000);
   });
 });
+
+async function writeToLocalStorage(dataToSave) {
+  if (window.localStorage) {
+    try {
+      let JSONifiedData = JSON.stringify(dataToSave);
+
+      displaySaveNoticeInDOM();
+      console.log("saving data of post in local storage", JSONifiedData);
+      window.localStorage.setItem("postBody", JSONifiedData);
+    } catch (e) {
+      console.error("could not store in local storage", e);
+    }
+  }
+}
+
+async function recallPostFromLocalStorage() {
+  if (window.localStorage) {
+    let retrievedPostBody = window.localStorage.getItem("postBody");
+    if (retrievedPostBody) {
+      divPostBodyEl.innerHTML = JSON.parse(retrievedPostBody);
+    }
+  }
+}
+
+function displaySaveNoticeInDOM() {
+  console.log("displaying saving notification");
+
+  let notification = document.createElement("span");
+  notification.textContent = "Saving...";
+  notification.classList.add("notification__displaying");
+  document.querySelector("#container__page").appendChild(notification);
+}

@@ -81,3 +81,16 @@ body {
   transform: scale(1.15);
   border: 3px solid black;
 }
+
+.notification__displaying {
+  display: block;
+  position: absolute;
+  top: 2.5%;
+  right: 2.5%;
+
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: dodgerblue;
+
+  transition: all 0.25s ease-in-out;
+}
