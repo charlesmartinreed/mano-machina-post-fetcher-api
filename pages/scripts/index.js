@@ -95,8 +95,17 @@ function checkForOpenRichTextClasses() {
   );
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  recallPostFromLocalStorage();
+window.addEventListener("DOMContentLoaded", async () => {
+  let storedPost = await recallPostFromLocalStorage();
+  if (storedPost) {
+    let { postTitle, postBody } = storedPost;
+    divPostTitleEl.textContent = postTitle;
+    divPostBodyEl.innerHTML = postBody;
+  }
+
+  if (!storedPost) {
+    console.log("no local post found, using placeholders instead");
+  }
 });
 
 window.addEventListener("richTextBtnEnabled", (e) => {
@@ -161,13 +170,22 @@ divPostBodyEl.addEventListener("focus", (e) => {
 
   divPostBodyEl.addEventListener("keydown", (e) => {
     if (typingTimer) window.clearTimeout(typingTimer);
-    payload = divPostBodyEl.innerHTML;
   });
 
   divPostBodyEl.addEventListener("keyup", (e) => {
     if (typingTimer) window.clearTimeout(typingTimer);
     typingTimer = window.setTimeout(async () => {
       // console.log("payload is", payload);
+      payload = {
+        postTitle:
+          divPostTitleEl.textContent === ""
+            ? divPostTitleEl.getAttribute("placeholder")
+            : divPostTitleEl.textContent,
+        postBody:
+          divPostBodyEl.innerHTML === ""
+            ? divPostBodyEl.getAttribute("placeholder")
+            : divPostBodyEl.innerHTML,
+      };
       await writeToLocalStorage(payload);
     }, 1000);
   });
@@ -180,7 +198,7 @@ async function writeToLocalStorage(dataToSave) {
 
       displaySaveNoticeInDOM();
       console.log("saving data of post in local storage", JSONifiedData);
-      window.localStorage.setItem("postBody", JSONifiedData);
+      window.localStorage.setItem("localPost", JSONifiedData);
     } catch (e) {
       console.error("could not store in local storage", e);
     }
@@ -189,10 +207,12 @@ async function writeToLocalStorage(dataToSave) {
 
 async function recallPostFromLocalStorage() {
   if (window.localStorage) {
-    let retrievedPostBody = window.localStorage.getItem("postBody");
-    if (retrievedPostBody) {
-      divPostBodyEl.innerHTML = JSON.parse(retrievedPostBody);
+    let retrievedPostLocal = window.localStorage.getItem("localPost");
+    if (retrievedPostLocal) {
+      return JSON.parse(retrievedPostLocal);
     }
+  } else {
+    return;
   }
 }
 
