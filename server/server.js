@@ -16,13 +16,24 @@ app.get("/api", (req, res) => {
   return res.status(200).json({ msg: "You made it to the endpoint" });
 });
 
-app.post("/api", (req, res) => {
+async function storeNewPost(req) {
+  let { postBody, postTitle } = req.body;
+
+  let createdPost = new Post(postTitle, postBody);
+  // TODO: generatePostHTMLPage
+  return createdPost.getPostId();
+}
+
+app.post("/api", async (req, res) => {
   if (req.body) {
     // console.log("form data looks like this", JSON.parse(req.body));
-    let { postBody, postTitle } = req.body;
-    console.log("postbody is", postBody);
-    console.log("posttitle is", postTitle);
-    res.sendStatus(200);
+    try {
+      let postId = await storeNewPost(req);
+      console.log("post created, id is", postId);
+      return res.status(200);
+    } catch (e) {
+      throw new Error(e);
+    }
   } else {
     return res.sendStatus(500);
   }
