@@ -16,7 +16,7 @@ app.get("/api", (req, res) => {
   return res.status(200).json({ msg: "You made it to the endpoint" });
 });
 
-app.post("/", (req, res) => {
+app.post("/api", (req, res) => {
   if (req.body) {
     // console.log("form data looks like this", JSON.parse(req.body));
     let { postBody, postTitle } = req.body;

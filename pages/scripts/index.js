@@ -7,34 +7,34 @@ let testingURL = "http://localhost:7000/api";
 let pressedKeys = [];
 
 btnSubmitEl.addEventListener("click", async (e) => {
-  // e.preventDefault();
-  // TESTING STATE
-  // NOT CHECKING FOR VALID DATA, ETC
-  let postTitle = divPostTitleEl.innerHTML;
-  let postBody = divPostBodyEl.innerHTML;
-
-  if (postTitle !== "" && postBody !== "") {
-    let postJSON = JSON.stringify({
-      postTitle,
-      postBody,
-    });
-
-    try {
-      let res = await fetch(testingURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: postJSON,
-      });
-
-      // TODO: This should re-direct to the newly created post
-      if (res.ok) console.log("posted successfully!");
-    } catch (e) {
-      console.error("Failed to submit post. Please try again.");
+  try {
+    let res = await storePostRemotely();
+    if (res.ok) {
+      console.log("successfully posted stored data to remote server");
     }
+  } catch (e) {
+    console.error("Error caught, failed to save post to remote server", e);
   }
 });
+
+async function storePostRemotely() {
+  let res;
+
+  try {
+    let postData = window.localStorage.getItem("localPost");
+    res = await fetch(testingURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: postData,
+    });
+  } catch (e) {
+    throw new Error(`Failed to submit post to remote server: ${e}`);
+  }
+
+  return res;
+}
 
 btnsRichTextEls.forEach((btn) => {
   btn.addEventListener("click", (e) => {
