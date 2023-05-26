@@ -7,6 +7,9 @@ module.exports = class Post {
     this.postUpdatedAt = null;
   }
 
+  title = this.postTitle;
+  body = this.postBody;
+
   #setPostId = (idLen = 16) => {
     const randomizeRanges = [
       () => {
