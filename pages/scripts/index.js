@@ -11,6 +11,10 @@ btnSubmitEl.addEventListener("click", async (e) => {
     let res = await storePostRemotely();
     if (res.ok) {
       console.log("successfully posted stored data to remote server");
+      let { postId, pageHTML } = await res.json();
+
+      console.log("post created, id is", postId);
+      console.log("page created, html is", pageHTML);
     }
   } catch (e) {
     console.error("Error caught, failed to save post to remote server", e);

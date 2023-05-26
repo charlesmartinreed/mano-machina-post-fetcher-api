@@ -21,49 +21,73 @@ module.exports = class Page {
     this.jsScripts = jsScripts;
   }
 
-  #getCSSStyles = () => {
+  #setCSSStyles = () => {
     let tags = [];
 
     for (let cssPath of this.cssStyles) {
-      headerTags.push(`<link rel="stylesheet" href=${cssPath} />`);
+      tags.push(`<link rel="stylesheet" href="${cssPath}" />`);
     }
 
     return tags;
   };
 
-  #getJSScripts = () => {
+  getCSSStyles = () => {
+    return this.#setCSSStyles();
+  };
+
+  #setJSScripts = () => {
     let tags = [];
 
     for (let jsPath of this.jsScripts) {
-      headerTags.push(`<script defer src=${jsPath} type="module"></script>`);
+      tags.push(`<script defer src="${jsPath}" type="module"></script>`);
     }
 
     return tags;
   };
 
-  #getPageScripts = () => {
-    let headerTags = this.#getCSSStyles().concat(this.#getJSScripts());
+  getJSScripts = () => {
+    return this.#setJSScripts();
+  };
 
-    return headerTags.join(`\\n`);
+  #setHeaderTags = () => {
+    let headerTags = this.#setCSSStyles().concat(this.#setJSScripts());
+
+    return headerTags.join("\n");
+  };
+
+  getHeaderTags = () => {
+    return this.#setHeaderTags();
+  };
+
+  getPostTitle = () => {
+    return this.postTitle;
+  };
+
+  getPostBody = () => {
+    return this.postBody;
   };
 
   #composeHTML = () => {
-    return `
+    let html = `
     <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    ${this.#getPageScripts}
-    <title>${this.postTitle}</title>
+    ${this.getHeaderTags()}
+    <title>${this.getPostTitle()}</title>
 </head>
 <body>
-    ${this.postBody}
+    ${this.getPostBody()}
 </body>
 </html>
     `;
+
+    return html;
   };
 
-  html = this.#composeHTML();
+  html = () => this.#composeHTML();
+  // styles = this.cssStyles;
+  // title = this.postTitle;
 };

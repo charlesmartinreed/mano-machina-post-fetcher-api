@@ -4,9 +4,6 @@ const app = express();
 const Post = require("../classes/Post");
 const Page = require("../classes/Page");
 
-const defaultStyles = [`./pages/styles/post.css`];
-const defaultScripts = [`./pages/scripts/post.js`];
-
 const PORT = process.env.PORT || 7000;
 app.use(express.static("pages"));
 app.use(express.json());
@@ -21,14 +18,16 @@ app.get("/api", (req, res) => {
 });
 
 async function storeNewPost(req) {
+  let defaultStyles = [`./pages/styles/post.css`];
+  let defaultScripts = [`./pages/scripts/post.js`];
+
   let { postBody, postTitle } = req.body;
 
   let createdPost = new Post(postTitle, postBody);
 
-  // for now, use the default script and styles
   let createdPage = new Page(
-    Post.postTitle,
-    Post.postBody,
+    createdPost.postTitle,
+    createdPost.postBody,
     defaultStyles,
     defaultScripts
   );
@@ -43,12 +42,12 @@ app.post("/api", async (req, res) => {
       let { createdPage, createdPost } = await storeNewPost(req);
 
       let postId = createdPost.getPostId();
-      let pageHTML = createdPage.html;
+      let pageHTML = createdPage.html();
 
-      console.log("post created, id is", postId);
-      console.log("page created, html is", pageHTML);
-
-      return res.status(200);
+      return res.status(200).json({
+        postId,
+        pageHTML,
+      });
     } catch (e) {
       throw new Error(e);
     }
