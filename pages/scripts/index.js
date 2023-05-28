@@ -19,7 +19,7 @@ async function storePostRemotely() {
 
   try {
     let postToSave = window.localStorage.getItem("postData");
-    let postId = JSON.parse(postToSave).id;
+    let postId = JSON.parse(postToSave).postId;
 
     if (postToSave && !postId) {
       res = await fetch(testingURL, {
@@ -37,7 +37,7 @@ async function storePostRemotely() {
 
         console.log("post created, id is", postId);
         console.log("page created, html is", pageHTML);
-        await writeToLocalStorage({ ...postToSave, postId });
+        await writeToLocalStorage({ ...postToSave, postId: postId });
       }
     } else if (postToSave && postId) {
       let updateURLPath = `${testingURL}/${postId}`;
@@ -207,6 +207,7 @@ divPostBodyEl.addEventListener("focus", (e) => {
           divPostBodyEl.innerHTML === ""
             ? divPostBodyEl.getAttribute("placeholder")
             : divPostBodyEl.innerHTML,
+        postId: null,
       };
       await writeToLocalStorage(payload);
     }, 1000);
@@ -215,16 +216,20 @@ divPostBodyEl.addEventListener("focus", (e) => {
 
 async function writeToLocalStorage(dataToSave) {
   if (window.localStorage) {
-    try {
-      let JSONifiedData = JSON.stringify(dataToSave);
+    {
+      try {
+        let JSONifiedData = JSON.stringify(dataToSave);
 
-      displaySaveNoticeInDOM();
-      console.log("saving data of post in local storage", JSONifiedData);
-      window.localStorage.setItem("postData", JSONifiedData);
-      console.log("post data written successfully");
-    } catch (e) {
-      console.error("could not store in local storage", e);
+        displaySaveNoticeInDOM();
+        console.log("saving data of post in local storage", JSONifiedData);
+        window.localStorage.setItem("postData", JSONifiedData);
+        console.log("post data written successfully");
+      } catch (e) {
+        console.error("could not store in local storage", e);
+      }
     }
+  } else {
+    return;
   }
 }
 
