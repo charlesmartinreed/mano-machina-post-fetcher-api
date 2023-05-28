@@ -8,14 +8,7 @@ let pressedKeys = [];
 
 btnSubmitEl.addEventListener("click", async (e) => {
   try {
-    let res = await storePostRemotely();
-    if (res.ok) {
-      console.log("successfully posted stored data to remote server");
-      let { postId, pageHTML } = await res.json();
-
-      console.log("post created, id is", postId);
-      console.log("page created, html is", pageHTML);
-    }
+    await storePostRemotely();
   } catch (e) {
     console.error("Error caught, failed to save post to remote server", e);
   }
@@ -25,14 +18,39 @@ async function storePostRemotely() {
   let res;
 
   try {
-    let postData = window.localStorage.getItem("localPost");
-    res = await fetch(testingURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: postData,
-    });
+    let postToSave = window.localStorage.getItem("postData");
+    let postId = JSON.parse(postToSave).id;
+
+    if (postToSave && !postId) {
+      res = await fetch(testingURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: postToSave,
+      });
+
+      if (res.ok) {
+        let { postId, pageHTML } = await res.json();
+
+        console.log("successfully posted stored data to remote server");
+
+        console.log("post created, id is", postId);
+        console.log("page created, html is", pageHTML);
+        await writeToLocalStorage({ ...postToSave, postId });
+      }
+    } else if (postToSave && postId) {
+      let updateURLPath = `${testingURL}/${postId}`;
+      res = await fetch(updateURLPath, {
+        method: "UPDATE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: postToSave,
+      });
+    } else {
+      return;
+    }
   } catch (e) {
     throw new Error(`Failed to submit post to remote server: ${e}`);
   }
@@ -202,7 +220,8 @@ async function writeToLocalStorage(dataToSave) {
 
       displaySaveNoticeInDOM();
       console.log("saving data of post in local storage", JSONifiedData);
-      window.localStorage.setItem("localPost", JSONifiedData);
+      window.localStorage.setItem("postData", JSONifiedData);
+      console.log("post data written successfully");
     } catch (e) {
       console.error("could not store in local storage", e);
     }
@@ -211,7 +230,7 @@ async function writeToLocalStorage(dataToSave) {
 
 async function recallPostFromLocalStorage() {
   if (window.localStorage) {
-    let retrievedPostLocal = window.localStorage.getItem("localPost");
+    let retrievedPostLocal = window.localStorage.getItem("postData");
     if (retrievedPostLocal) {
       return JSON.parse(retrievedPostLocal);
     }
