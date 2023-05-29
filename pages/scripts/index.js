@@ -5,6 +5,7 @@ const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
 
 let testingURL = "http://localhost:7000/api";
 let pressedKeys = [];
+const defaultPostID = "0123456789";
 
 btnSubmitEl.addEventListener("click", async (e) => {
   try {
@@ -126,9 +127,19 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (!storedPost) {
+    setDefaultPostFieldValues(divPostTitleEl, divPostBodyEl);
     console.log("no local post found, using placeholders instead");
   }
 });
+
+function setDefaultPostFieldValues(...elements) {
+  elements.forEach((elem) => {
+    let placeholder = elem.getAttribute("placeholder");
+    placeholder !== ""
+      ? (elem.textContent = placeholder)
+      : (elem.textContent = "You've got the mic");
+  });
+}
 
 window.addEventListener("richTextBtnEnabled", (e) => {
   openRichTextPortion(e.detail);
@@ -186,11 +197,12 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-divPostBodyEl.addEventListener("focus", (e) => {
+divPostBodyEl.addEventListener("input", (e) => {
   let typingTimer;
   let payload;
 
   divPostBodyEl.addEventListener("keydown", (e) => {
+    console.log("timer started");
     if (typingTimer) window.clearTimeout(typingTimer);
   });
 
@@ -199,6 +211,7 @@ divPostBodyEl.addEventListener("focus", (e) => {
     typingTimer = window.setTimeout(async () => {
       // console.log("payload is", payload);
       payload = {
+        postId: defaultPostID,
         postTitle:
           divPostTitleEl.textContent === ""
             ? divPostTitleEl.getAttribute("placeholder")
@@ -207,7 +220,6 @@ divPostBodyEl.addEventListener("focus", (e) => {
           divPostBodyEl.innerHTML === ""
             ? divPostBodyEl.getAttribute("placeholder")
             : divPostBodyEl.innerHTML,
-        postId: null,
       };
       await writeToLocalStorage(payload);
     }, 1000);
@@ -218,7 +230,20 @@ async function writeToLocalStorage(dataToSave) {
   if (window.localStorage) {
     {
       try {
-        let JSONifiedData = JSON.stringify(dataToSave);
+        let { postTitle, postBody, postId } = dataToSave;
+
+        if (postId !== defaultPostID) {
+          window.localStorage.removeItem("postData")[defaultPostID];
+        }
+
+        let postObj = {};
+
+        postObj[postId] = {
+          postTitle: postTitle,
+          postBody: postBody,
+        };
+
+        let JSONifiedData = JSON.stringify(postObj);
 
         displaySaveNoticeInDOM();
         console.log("saving data of post in local storage", JSONifiedData);
@@ -233,11 +258,17 @@ async function writeToLocalStorage(dataToSave) {
   }
 }
 
-async function recallPostFromLocalStorage() {
+async function recallPostFromLocalStorage(postID = defaultPostID) {
   if (window.localStorage) {
     let retrievedPostLocal = window.localStorage.getItem("postData");
+
     if (retrievedPostLocal) {
-      return JSON.parse(retrievedPostLocal);
+      let post = JSON.parse(retrievedPostLocal)[postID];
+
+      // let { postTitle, postBody} = post;
+
+      console.log("retrieved post from lcoal", post);
+      return post;
     }
   } else {
     return;
