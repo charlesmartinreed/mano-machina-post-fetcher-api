@@ -42,7 +42,7 @@ async function storePostRemotely() {
     } else if (postToSave && postId) {
       let updateURLPath = `${testingURL}/${postId}`;
       res = await fetch(updateURLPath, {
-        method: "UPDATE",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },

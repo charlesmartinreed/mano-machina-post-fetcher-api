@@ -17,6 +17,12 @@ app.get("/api", (req, res) => {
   return res.status(200).json({ msg: "You made it to the endpoint" });
 });
 
+app.put("/api/:postId", (req, res) => {
+  // TODO: Post ID lookup
+  console.log("looking up post id", req.params.postId);
+  return res.status(200);
+});
+
 async function storeNewPost(req) {
   let defaultStyles = [`./pages/styles/post.css`];
   let defaultScripts = [`./pages/scripts/post.js`];
