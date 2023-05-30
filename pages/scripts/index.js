@@ -3,7 +3,6 @@ const divPostBodyEl = document.querySelector("#div__post__body");
 const btnSubmitEl = document.querySelector("#submit__post__button");
 const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
 
-let testingURL = "http://localhost:7000/api";
 let pressedKeys = [];
 const defaultPostID = "0123456789";
 
@@ -23,13 +22,14 @@ async function storePostRemotely() {
     let postId = JSON.parse(postToSave).postId;
 
     if (postToSave && !postId) {
-      res = await fetch(testingURL, {
+      let URL = `${window.location.host}/api`;
+      let postData = (res = await fetch(URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: postToSave,
-      });
+      }));
 
       if (res.ok) {
         let { postId, pageHTML } = await res.json();
@@ -41,7 +41,7 @@ async function storePostRemotely() {
         await writeToLocalStorage({ ...postToSave, postId: postId });
       }
     } else if (postToSave && postId) {
-      let updateURLPath = `${testingURL}/${postId}`;
+      let updateURLPath = `${window.location.host}/api/${postId}`;
       res = await fetch(updateURLPath, {
         method: "PUT",
         headers: {
@@ -265,9 +265,6 @@ async function recallPostFromLocalStorage(postID = defaultPostID) {
     if (retrievedPostLocal) {
       let post = JSON.parse(retrievedPostLocal)[postID];
 
-      // let { postTitle, postBody} = post;
-
-      console.log("retrieved post from lcoal", post);
       return post;
     }
   } else {
