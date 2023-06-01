@@ -9,7 +9,6 @@
 
 html,
 body {
-  line-height: 1.6rem;
   height: 100vh;
 }
 
@@ -46,6 +45,7 @@ body {
   min-height: 500px;
   font-size: 18px;
   padding: 1rem;
+  line-height: 1.6rem;
 }
 
 #div__post__title {

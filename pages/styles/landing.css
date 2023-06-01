@@ -1,0 +1,46 @@
+@import url("./main.css");
+
+#container__landing__wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+#header__landing__main {
+  font-size: 4.5rem;
+  font-weight: 900;
+}
+
+#header__landing__sub {
+  font-size: 2rem;
+  font-style: italic;
+  color: rgba(43, 43, 43, 1);
+  font-weight: 400;
+}
+
+.container__login__buttons {
+  margin: 1rem;
+}
+
+.btn {
+  cursor: pointer;
+  background: none;
+  border: 2px solid black;
+  border-radius: 3px;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.1rem;
+}
+
+.container__login__buttons .btn {
+  margin: 0 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.container__login__buttons .btn:hover {
+  box-shadow: 6px 6px 0px black;
+  /* border-right: 6px solid black; */
+}
