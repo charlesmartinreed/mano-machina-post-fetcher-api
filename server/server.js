@@ -13,6 +13,15 @@ app.get("/", (req, res) => {
   res.sendFile("landing.html", { root: "pages" });
 });
 
+app.get("/editor/:userMode", (req, res) => {
+  let { userMode } = req.params;
+
+  if (userMode === "userMode=guest") {
+    // res.redirect("/editor");
+    res.status(200).sendFile("editor.html", { root: "pages" });
+  }
+});
+
 app.get("/api", (req, res) => {
   return res.status(200).json({ msg: "You made it to the endpoint" });
 });
