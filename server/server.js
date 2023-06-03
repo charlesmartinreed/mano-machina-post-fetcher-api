@@ -18,7 +18,7 @@ app.get("/editor/:userMode", (req, res) => {
 
   if (userMode === "userMode=guest") {
     // res.redirect("/editor");
-    res.status(200).sendFile("editor.html", { root: "pages" });
+    res.status(302).sendFile("editor.html", { root: "pages" });
   }
 });
 

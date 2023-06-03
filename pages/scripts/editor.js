@@ -6,7 +6,15 @@ const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
 let pressedKeys = [];
 const defaultPostID = "0123456789";
 
+function enableGuestMode() {
+  let userCredentialTextEl = document.getElementById("text__user__credentials");
+  userCredentialTextEl.textContent = "Guest Mode";
+}
+
 btnSubmitEl.addEventListener("click", async (e) => {
+  if (JSON.parse(window.location.getItem("userMode")) === "guest") {
+    return;
+  }
   try {
     await storePostRemotely();
   } catch (e) {
@@ -118,7 +126,22 @@ function checkForOpenRichTextClasses() {
   );
 }
 
+function userHasCredentials() {
+  // TODO: Implement Credentials on the server side
+  let guestMode = window.localStorage.getItem("userMode");
+
+  if (guestMode) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 window.addEventListener("DOMContentLoaded", async () => {
+  if (!userHasCredentials()) {
+    enableGuestMode();
+  }
+
   let storedPost = await recallPostFromLocalStorage();
   if (storedPost) {
     let { postTitle, postBody } = storedPost;

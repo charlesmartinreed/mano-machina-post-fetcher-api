@@ -4,11 +4,19 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../styles/main.css" />
-    <script defer src="../scripts/index.js" type="module"></script>
+    <link rel="stylesheet" href="../styles/editor.css" />
+    <script defer src="../scripts/editor.js" type="module"></script>
     <title>Mano e Machina Post Creator (pre-alpha)</title>
   </head>
   <body>
+    <nav id="navbar__page">
+      <ul class="navbar__items">
+        <li class="navbar__item" id="nav__dark__mode__toggle">
+          <button class="btn" id="btn__dark__mode__toggle">🔦</button>
+        </li>
+        <li class="navbar__item" id="text__user__credentials"></li>
+      </ul>
+    </nav>
     <div id="container__page">
       <div
         contenteditable="true"
@@ -27,7 +35,7 @@
       ></div>
       <div class="container__richtext__icons" id="container__richtext__icons">
         <button
-          class="btn__richtext__ui"
+          class="btn btn__richtext__ui"
           id="btn__set__bold"
           data-is-active="false"
           data-rich-text-operation="set_bold"
@@ -35,7 +43,7 @@
           B
         </button>
         <button
-          class="btn__richtext__ui"
+          class="btn btn__richtext__ui"
           id="btn__set__emphasis"
           data-is-active="false"
           data-rich-text-operation="set_emphasis"
@@ -43,7 +51,7 @@
           I
         </button>
         <button
-          class="btn__richtext__ui"
+          class="btn btn__richtext__ui"
           id="btn__set__underline"
           data-is-active="false"
           data-rich-text-operation="set_underline"
@@ -51,7 +59,7 @@
           U
         </button>
         <button
-          class="btn__richtext__ui"
+          class="btn btn__richtext__ui"
           id="btn__set__strikethrough"
           data-is-active="false"
           data-rich-text-operation="set_strike"
