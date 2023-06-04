@@ -9,6 +9,13 @@
   overflow: hidden;
 }
 
+:root {
+  --light-mode-bg-color: rgba(240, 240, 240, 1);
+  --light-mode-text-color: rgba(24, 24, 24, 1);
+  --dark-mode-bg-color: rgba(48, 48, 48, 1);
+  --dark-mode-text-color: rgba(240, 240, 240, 1);
+}
+
 html,
 body {
   height: 100vh;
@@ -101,4 +108,36 @@ body {
   color: dodgerblue;
 
   transition: all 0.25s ease-in-out;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background: var(--light-mode-bg-color);
+  }
+
+  html,
+  .btn {
+    color: var(--light-mode-text-color);
+  }
+
+  #div__post__title,
+  #div__post__body {
+    border-color: var(--light-mode-text-color);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: var(--dark-mode-bg-color);
+  }
+
+  html,
+  .btn {
+    color: var(--dark-mode-text-color);
+  }
+
+  #div__post__title,
+  #div__post__body {
+    border-color: var(--dark-mode-text-color);
+  }
 }

@@ -1,3 +1,5 @@
+const darkModeToggleEl = document.getElementById("btn__dark__mode__toggle");
+
 const divPostTitleEl = document.querySelector("#div__post__title");
 const divPostBodyEl = document.querySelector("#div__post__body");
 const btnSubmitEl = document.querySelector("#submit__post__button");
@@ -6,9 +8,44 @@ const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
 let pressedKeys = [];
 const defaultPostID = "0123456789";
 
+function userHasCredentials() {
+  // TODO: Implement Credentials on the server side
+  let guestMode = window.localStorage.getItem("userMode");
+
+  if (guestMode) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function enableGuestMode() {
   let userCredentialTextEl = document.getElementById("text__user__credentials");
   userCredentialTextEl.textContent = "Guest Mode";
+}
+
+function checkCurrentDarkModeStatus() {
+  if (!window.localStorage) return undefined;
+
+  if (window.localStorage) {
+    if (!window.localStorage.getItem("preferredColorScheme")) {
+      let preferredScheme =
+        window.matchMedia("(prefers-color-scheme: dark)").matches === true
+          ? "dark"
+          : "light";
+      window.localStorage.setItem("preferredColorScheme", preferredScheme);
+    }
+    return window.localStorage.getItem("preferredColorScheme");
+  }
+}
+
+function toggleDarkMode() {
+  if (checkCurrentDarkModeStatus()) {
+    let toggledColorScheme =
+      checkCurrentDarkModeStatus() === "dark" ? "light" : "dark";
+
+    window.localStorage.setItem("preferredColorScheme", toggledColorScheme);
+  }
 }
 
 btnSubmitEl.addEventListener("click", async (e) => {
@@ -126,18 +163,12 @@ function checkForOpenRichTextClasses() {
   );
 }
 
-function userHasCredentials() {
-  // TODO: Implement Credentials on the server side
-  let guestMode = window.localStorage.getItem("userMode");
+async function init() {
+  console.log(
+    "current stored dark mode status is",
+    checkCurrentDarkModeStatus()
+  );
 
-  if (guestMode) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-window.addEventListener("DOMContentLoaded", async () => {
   if (!userHasCredentials()) {
     enableGuestMode();
   }
@@ -153,6 +184,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     setDefaultPostFieldValues(divPostTitleEl, divPostBodyEl);
     console.log("no local post found, using placeholders instead");
   }
+}
+
+window
+  .matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", (e) => toggleDarkMode());
+
+window.addEventListener("DOMContentLoaded", async () => {
+  await init();
 });
 
 function setDefaultPostFieldValues(...elements) {
@@ -248,6 +287,8 @@ divPostBodyEl.addEventListener("input", (e) => {
     }, 1000);
   });
 });
+
+darkModeToggleEl.addEventListener("click", (e) => toggleDarkMode());
 
 async function writeToLocalStorage(dataToSave) {
   if (window.localStorage) {
