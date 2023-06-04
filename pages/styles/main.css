@@ -70,7 +70,7 @@ body {
 }
 
 #submit__post__button {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
 }
 
@@ -86,6 +86,7 @@ body {
 
 #container__richtext__icons .btn__richtext__ui {
   cursor: pointer;
+  font-size: 20px;
 }
 
 .btn__richtext__ui {
@@ -110,13 +111,48 @@ body {
   transition: all 0.25s ease-in-out;
 }
 
+/* LiGHT MODE / DARK MODE CLASSES */
+
+#body__page.light {
+  background: var(--light-mode-bg-color);
+}
+
+html.light,
+.btn.light,
+.btn__richtext__ui.light {
+  background: var(--light-mode-bg-color);
+  color: var(--light-mode-text-color);
+}
+
+#div__post__title.light,
+#div__post__body.light {
+  border-color: var(--light-mode-text-color);
+}
+
+#body__page.dark {
+  background: var(--dark-mode-bg-color);
+}
+
+html.dark,
+.btn.dark,
+.btn__richtext__ui.dark {
+  background: var(--dark-mode-bg-color);
+  color: var(--dark-mode-text-color);
+}
+
+#div__post__title.dark,
+#div__post__body.dark {
+  border-color: var(--dark-mode-text-color);
+}
+
 @media (prefers-color-scheme: light) {
   body {
     background: var(--light-mode-bg-color);
   }
 
   html,
-  .btn {
+  .btn,
+  .btn__richtext__ui {
     color: var(--light-mode-text-color);
   }
 
@@ -132,7 +168,8 @@ body {
   }
 
   html,
-  .btn {
+  .btn,
+  .btn__richtext__ui {
     color: var(--dark-mode-text-color);
   }
 

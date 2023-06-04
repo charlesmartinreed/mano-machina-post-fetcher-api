@@ -45,7 +45,36 @@ function toggleDarkMode() {
       checkCurrentDarkModeStatus() === "dark" ? "light" : "dark";
 
     window.localStorage.setItem("preferredColorScheme", toggledColorScheme);
+
+    toggleDarkModeClassesOnElements(toggledColorScheme);
   }
+}
+
+function toggleDarkModeClassesOnElements(scheme) {
+  console.log("switching to", scheme);
+
+  let elementsToMod = [
+    document.querySelector("#body__page"),
+    document.querySelector("html"),
+    ...document.querySelectorAll(".btn"),
+    divPostTitleEl,
+    divPostBodyEl,
+  ];
+
+  elementsToMod.forEach((el) => {
+    switch (scheme) {
+      case "dark":
+        el.classList.remove("light");
+        el.classList.add("dark");
+        break;
+      case "light":
+        el.classList.remove("dark");
+        el.classList.add("light");
+        break;
+      default:
+        break;
+    }
+  });
 }
 
 btnSubmitEl.addEventListener("click", async (e) => {
@@ -164,10 +193,12 @@ function checkForOpenRichTextClasses() {
 }
 
 async function init() {
+  checkCurrentDarkModeStatus();
   console.log(
     "current stored dark mode status is",
     checkCurrentDarkModeStatus()
   );
+  toggleDarkModeClassesOnElements(checkCurrentDarkModeStatus());
 
   if (!userHasCredentials()) {
     enableGuestMode();
