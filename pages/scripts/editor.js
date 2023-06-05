@@ -51,8 +51,6 @@ function toggleDarkMode() {
 }
 
 function toggleDarkModeClassesOnElements(scheme) {
-  console.log("switching to", scheme);
-
   let elementsToMod = [
     document.querySelector("#body__page"),
     document.querySelector("html"),
@@ -198,6 +196,7 @@ async function init() {
     "current stored dark mode status is",
     checkCurrentDarkModeStatus()
   );
+  
   toggleDarkModeClassesOnElements(checkCurrentDarkModeStatus());
 
   if (!userHasCredentials()) {

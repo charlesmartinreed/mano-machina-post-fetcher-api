@@ -24,7 +24,61 @@ body {
 .btn {
   cursor: pointer;
   background: none;
-  border: none;
+  border: transparent;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#navbar__page {
+  width: 30vw;
+  height: 70px;
+  max-height: 200px;
+  position: sticky;
+  top: 0;
+  left: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#navbar__page .navbar__items {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#btn__dark__mode__toggle {
+  height: 30px;
+  /* min-height: 30px; */
+  width: 30px;
+  border: transparent;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 0.5rem;
+}
+
+#dark__mode__icon__lightside,
+#dark__mode__icon__darkside {
+  position: absolute;
+
+  height: 15px;
+  width: 30px;
+  left: 0;
+}
+
+#dark__mode__icon__lightside {
+  background-color: #effc78;
+}
+
+#dark__mode__icon__darkside {
+  background-color: #191a19;
+}
+
+#text__user__credentials {
+  font-weight: 500;
+  cursor: pointer;
 }
 
 #container__richtext__icons button,
@@ -129,6 +183,22 @@ html.light,
   border-color: var(--light-mode-text-color);
 }
 
+#btn__dark__mode__toggle.light {
+  transform: rotateX(-360deg);
+}
+
+#btn__dark__mode__toggle.dark {
+  transform: rotateX(360deg);
+}
+
+#btn__dark__mode__toggle.light #dark__mode__icon__lightside {
+  top: 0;
+}
+
+#btn__dark__mode__toggle.light #dark__mode__icon__darkside {
+  bottom: 0;
+}
+
 #body__page.dark {
   background: var(--dark-mode-bg-color);
 }
@@ -143,6 +213,14 @@ html.dark,
 #div__post__title.dark,
 #div__post__body.dark {
   border-color: var(--dark-mode-text-color);
+}
+
+#btn__dark__mode__toggle.dark #dark__mode__icon__darkside {
+  top: 0;
+}
+
+#btn__dark__mode__toggle.dark #dark__mode__icon__lightside {
+  bottom: 0;
 }
 
 @media (prefers-color-scheme: light) {
@@ -160,6 +238,12 @@ html.dark,
   #div__post__body {
     border-color: var(--light-mode-text-color);
   }
+
+  #dark__mode__icon__lightside {
+  }
+
+  #dark__mode__icon__darkside {
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -176,5 +260,11 @@ html.dark,
   #div__post__title,
   #div__post__body {
     border-color: var(--dark-mode-text-color);
+  }
+
+  #dark__mode__icon__darkside {
+  }
+
+  #dark__mode__icon__lightside {
   }
 }
