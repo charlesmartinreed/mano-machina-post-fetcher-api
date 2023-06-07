@@ -1,4 +1,5 @@
 const btnGuestModeEl = document.getElementById("btn__guest");
+import * as Navbar from "../scripts/navbar.js";
 
 btnGuestModeEl.addEventListener("click", async (e) => {
   await initGuestMode();

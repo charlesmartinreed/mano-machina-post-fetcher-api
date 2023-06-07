@@ -39,6 +39,14 @@ function checkCurrentDarkModeStatus() {
   }
 }
 
+let elementsToMod = [
+  document.querySelector("#body__page"),
+  document.querySelector("html"),
+  ...document.querySelectorAll(".btn"),
+  divPostTitleEl,
+  divPostBodyEl,
+];
+
 function toggleDarkMode() {
   if (checkCurrentDarkModeStatus()) {
     let toggledColorScheme =
@@ -46,19 +54,12 @@ function toggleDarkMode() {
 
     window.localStorage.setItem("preferredColorScheme", toggledColorScheme);
 
-    toggleDarkModeClassesOnElements(toggledColorScheme);
+    toggleDarkModeClassesOnElements(toggledColorScheme, elementsToMod);
   }
 }
 
-function toggleDarkModeClassesOnElements(scheme) {
-  let elementsToMod = [
-    document.querySelector("#body__page"),
-    document.querySelector("html"),
-    ...document.querySelectorAll(".btn"),
-    divPostTitleEl,
-    divPostBodyEl,
-  ];
 
+function toggleDarkModeClassesOnElements(scheme, elements) {
   elementsToMod.forEach((el) => {
     switch (scheme) {
       case "dark":
@@ -196,7 +197,7 @@ async function init() {
     "current stored dark mode status is",
     checkCurrentDarkModeStatus()
   );
-  
+
   toggleDarkModeClassesOnElements(checkCurrentDarkModeStatus());
 
   if (!userHasCredentials()) {

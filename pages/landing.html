@@ -6,16 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Publish or Perish</title>
     <link rel="stylesheet" href="./styles/landing.css" />
-    <script defer src="./scripts/landing.js"></script>
+    <script defer src="./scripts/landing.js" type="module"></script>
+    <script defer src="./scripts/navbar.js" type="module"></script>
   </head>
-  <body class="container__landing__wrapper" id="container__landing__wrapper">
-    <h1 class="header__main" id="header__landing__main">Publish or Perish</h1>
-    <h6 class="header__sub" id="header__landing__sub">
-      A simple (and clean) front-end for writers
-    </h6>
-    <div class="container__login__buttons">
-      <button class="btn" id="btn__login">Login</button>
-      <button class="btn" id="btn__guest" type="submit">Guest Mode</button>
+  <body>
+    <nav id="navbar__page">
+      <ul class="navbar__items">
+        <li class="navbar__item" id="nav__dark__mode__toggle">
+          <button class="btn" id="btn__dark__mode__toggle">
+            <div id="dark__mode__icon__lightside"></div>
+            <div id="dark__mode__icon__darkside"></div>
+          </button>
+        </li>
+        <li class="navbar__item" id="text__user__credentials"></li>
+      </ul>
+    </nav>
+    <div class="container__landing__wrapper" id="container__landing__wrapper">
+      <h1 class="header__main" id="header__landing__main">Publish or Perish</h1>
+      <h6 class="header__sub" id="header__landing__sub">
+        A simple (and clean) front-end for writers
+      </h6>
+      <div class="container__login__buttons">
+        <button class="btn" id="btn__login">Login</button>
+        <button class="btn" id="btn__guest" type="submit">Guest Mode</button>
+      </div>
     </div>
   </body>
 </html>

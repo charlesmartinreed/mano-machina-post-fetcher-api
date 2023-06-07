@@ -29,7 +29,7 @@ body {
 }
 
 #navbar__page {
-  width: 30vw;
+  width: 100vw;
   height: 70px;
   max-height: 200px;
   position: sticky;
@@ -167,19 +167,9 @@ body {
 
 /* LiGHT MODE / DARK MODE CLASSES */
 
-#body__page.light {
-  background: var(--light-mode-bg-color);
-}
-
-html.light,
-.btn.light,
-.btn__richtext__ui.light {
+.light {
   background: var(--light-mode-bg-color);
   color: var(--light-mode-text-color);
-}
-
-#div__post__title.light,
-#div__post__body.light {
   border-color: var(--light-mode-text-color);
 }
 
@@ -199,19 +189,10 @@ html.light,
   bottom: 0;
 }
 
-#body__page.dark {
+.dark {
   background: var(--dark-mode-bg-color);
-}
-
-html.dark,
-.btn.dark,
-.btn__richtext__ui.dark {
   background: var(--dark-mode-bg-color);
   color: var(--dark-mode-text-color);
-}
-
-#div__post__title.dark,
-#div__post__body.dark {
   border-color: var(--dark-mode-text-color);
 }
 
