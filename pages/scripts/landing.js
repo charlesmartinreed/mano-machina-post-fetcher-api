@@ -1,4 +1,5 @@
 const btnGuestModeEl = document.getElementById("btn__guest");
+
 import * as Navbar from "../scripts/navbar.js";
 
 btnGuestModeEl.addEventListener("click", async (e) => {
@@ -44,4 +45,7 @@ function moveToNewPage(newLocation) {
   window.location.href = newLocation;
 }
 
-window.addEventListener("DOMContentLoaded", initLocalStorage());
+window.addEventListener("DOMContentLoaded", (e) => {
+  initLocalStorage();
+  Navbar.toggleDarkModeClassesOnElements();
+});

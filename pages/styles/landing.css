@@ -34,14 +34,10 @@
   width: 50%;
 }
 
-.btn {
-  border: 2px solid black;
+.container__login__buttons .btn {
   border-radius: 3px;
   padding: 0.25rem 0.5rem;
   font-size: 1.1rem;
-}
-
-.container__login__buttons .btn {
   margin: 0 0.5rem;
   transition: all 0.2s ease-in-out;
 }

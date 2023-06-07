@@ -1,3 +1,5 @@
+import * as Navbar from "../scripts/navbar.js";
+
 const darkModeToggleEl = document.getElementById("btn__dark__mode__toggle");
 
 const divPostTitleEl = document.querySelector("#div__post__title");
@@ -22,58 +24,6 @@ function userHasCredentials() {
 function enableGuestMode() {
   let userCredentialTextEl = document.getElementById("text__user__credentials");
   userCredentialTextEl.textContent = "Guest Mode";
-}
-
-function checkCurrentDarkModeStatus() {
-  if (!window.localStorage) return undefined;
-
-  if (window.localStorage) {
-    if (!window.localStorage.getItem("preferredColorScheme")) {
-      let preferredScheme =
-        window.matchMedia("(prefers-color-scheme: dark)").matches === true
-          ? "dark"
-          : "light";
-      window.localStorage.setItem("preferredColorScheme", preferredScheme);
-    }
-    return window.localStorage.getItem("preferredColorScheme");
-  }
-}
-
-let elementsToMod = [
-  document.querySelector("#body__page"),
-  document.querySelector("html"),
-  ...document.querySelectorAll(".btn"),
-  divPostTitleEl,
-  divPostBodyEl,
-];
-
-function toggleDarkMode() {
-  if (checkCurrentDarkModeStatus()) {
-    let toggledColorScheme =
-      checkCurrentDarkModeStatus() === "dark" ? "light" : "dark";
-
-    window.localStorage.setItem("preferredColorScheme", toggledColorScheme);
-
-    toggleDarkModeClassesOnElements(toggledColorScheme, elementsToMod);
-  }
-}
-
-
-function toggleDarkModeClassesOnElements(scheme, elements) {
-  elementsToMod.forEach((el) => {
-    switch (scheme) {
-      case "dark":
-        el.classList.remove("light");
-        el.classList.add("dark");
-        break;
-      case "light":
-        el.classList.remove("dark");
-        el.classList.add("light");
-        break;
-      default:
-        break;
-    }
-  });
 }
 
 btnSubmitEl.addEventListener("click", async (e) => {
@@ -192,13 +142,12 @@ function checkForOpenRichTextClasses() {
 }
 
 async function init() {
-  checkCurrentDarkModeStatus();
-  console.log(
-    "current stored dark mode status is",
-    checkCurrentDarkModeStatus()
-  );
+  let pageElements = [divPostTitleEl, divPostBodyEl];
 
-  toggleDarkModeClassesOnElements(checkCurrentDarkModeStatus());
+  Navbar.toggleDarkModeClassesOnElements(
+    Navbar.checkCurrentDarkModeStatus(),
+    pageElements
+  );
 
   if (!userHasCredentials()) {
     enableGuestMode();
@@ -216,10 +165,6 @@ async function init() {
     console.log("no local post found, using placeholders instead");
   }
 }
-
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", (e) => toggleDarkMode());
 
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
@@ -318,8 +263,6 @@ divPostBodyEl.addEventListener("input", (e) => {
     }, 1000);
   });
 });
-
-darkModeToggleEl.addEventListener("click", (e) => toggleDarkMode());
 
 async function writeToLocalStorage(dataToSave) {
   if (window.localStorage) {

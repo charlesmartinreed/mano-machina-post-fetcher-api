@@ -173,6 +173,10 @@ body {
   border-color: var(--light-mode-text-color);
 }
 
+.has-border.light {
+  border: 2px solid var(--light-mode-text-color);
+}
+
 #btn__dark__mode__toggle.light {
   transform: rotateX(-360deg);
 }
@@ -189,6 +193,10 @@ body {
   bottom: 0;
 }
 
+.has-border.dark {
+  border: 2px solid var(--dark-mode-text-color);
+}
+
 .dark {
   background: var(--dark-mode-bg-color);
   background: var(--dark-mode-bg-color);
@@ -202,50 +210,4 @@ body {
 
 #btn__dark__mode__toggle.dark #dark__mode__icon__lightside {
   bottom: 0;
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    background: var(--light-mode-bg-color);
-  }
-
-  html,
-  .btn,
-  .btn__richtext__ui {
-    color: var(--light-mode-text-color);
-  }
-
-  #div__post__title,
-  #div__post__body {
-    border-color: var(--light-mode-text-color);
-  }
-
-  #dark__mode__icon__lightside {
-  }
-
-  #dark__mode__icon__darkside {
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background: var(--dark-mode-bg-color);
-  }
-
-  html,
-  .btn,
-  .btn__richtext__ui {
-    color: var(--dark-mode-text-color);
-  }
-
-  #div__post__title,
-  #div__post__body {
-    border-color: var(--dark-mode-text-color);
-  }
-
-  #dark__mode__icon__darkside {
-  }
-
-  #dark__mode__icon__lightside {
-  }
 }
