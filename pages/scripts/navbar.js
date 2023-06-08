@@ -1,18 +1,35 @@
-let toggleBtn = document.getElementById("btn__dark__mode__toggle");
+const toggleBtn = document.getElementById("btn__dark__mode__toggle");
+
 const siteWideElements = [
   document.querySelector("body"),
   document.querySelector("html"),
   ...document.querySelectorAll(".btn"),
 ];
 
-toggleBtn.addEventListener("click", (e) => {
-  let currentMode = checkCurrentDarkModeStatus();
-  let scheme = toggleDarkMode(currentMode);
+function checkCurrentCredentials() {
+  // TODO: Integrate Credentials on server side
+  if (window.localStorage) {
+    let authToken = window.localStorage.getItem("authToken");
+    if (authToken) {
+      // login here
+      console.log("user auth token");
+    } else {
+      enableGuestMode();
+    }
+  }
+}
 
-  let elements = [...siteWideElements];
+function enableGuestMode() {
+  if (window.localStorage) {
+    let guestStatus = window.localStorage.getItem("userIsGuest");
 
-  toggleDarkModeClassesOnElements(scheme, elements);
-});
+    if (!guestStatus) {
+      window.localStorage.setItem("userIsGuest", JSON.stringify(true));
+    }
+  }
+
+  document.getElementById("nav__username__field").textContent = "Guest Mode";
+}
 
 function checkCurrentDarkModeStatus() {
   if (!window.localStorage) return undefined;
@@ -37,10 +54,10 @@ function toggleDarkMode(currentMode) {
   return toggledColorScheme;
 }
 
-function toggleDarkModeClassesOnElements(
-  scheme = checkCurrentDarkModeStatus(),
-  localElements = enumeratePageContents()
-) {
+function toggleDarkModeClassesOnElements() {
+  let scheme = checkCurrentDarkModeStatus();
+  let localElements = enumeratePageContents();
+
   let allElements = [...siteWideElements, ...localElements];
 
   console.log("local elements", localElements);
@@ -100,6 +117,15 @@ function systemDarkModePrefChanged() {
     : toggleDarkModeClassesOnElements(scheme, siteWideElements);
 }
 
+toggleBtn.addEventListener("click", (e) => {
+  let currentMode = checkCurrentDarkModeStatus();
+  let scheme = toggleDarkMode(currentMode);
+
+  let elements = [...siteWideElements];
+
+  toggleDarkModeClassesOnElements(scheme, elements);
+});
+
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", (e) => {
@@ -120,4 +146,5 @@ export {
   checkCurrentDarkModeStatus,
   toggleDarkModeClassesOnElements,
   systemDarkModePrefChanged,
+  checkCurrentCredentials,
 };

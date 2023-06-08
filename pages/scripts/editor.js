@@ -10,32 +10,49 @@ const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
 let pressedKeys = [];
 const defaultPostID = "0123456789";
 
-function userHasCredentials() {
-  // TODO: Implement Credentials on the server side
-  let guestMode = window.localStorage.getItem("userMode");
+async function init() {
+  Navbar.toggleDarkModeClassesOnElements();
+  Navbar.checkCurrentCredentials();
 
-  if (guestMode) {
-    return false;
-  } else {
-    return true;
+  let storedPost = await recallPostFromLocalStorage();
+  if (storedPost) {
+    let { postTitle, postBody } = storedPost;
+    divPostTitleEl.textContent = postTitle;
+    divPostBodyEl.innerHTML = postBody;
+  }
+
+  if (!storedPost) {
+    setDefaultPostFieldValues(divPostTitleEl, divPostBodyEl);
+    console.log("no local post found, using placeholders instead");
   }
 }
 
-function enableGuestMode() {
-  let userCredentialTextEl = document.getElementById("text__user__credentials");
-  userCredentialTextEl.textContent = "Guest Mode";
+/*
+
+=====================
+METHODS : POST SAVING LOGIC
+=====================
+
+*/
+
+function displaySaveNoticeInDOM() {
+  console.log("displaying saving notification");
+
+  let notification = document.createElement("span");
+  notification.textContent = "Saving...";
+  notification.classList.add("notification__displaying");
+  document.querySelector("#container__page").appendChild(notification);
 }
 
-btnSubmitEl.addEventListener("click", async (e) => {
-  if (JSON.parse(window.location.getItem("userMode")) === "guest") {
-    return;
-  }
-  try {
-    await storePostRemotely();
-  } catch (e) {
-    console.error("Error caught, failed to save post to remote server", e);
-  }
-});
+
+function setDefaultPostFieldValues(...elements) {
+  elements.forEach((elem) => {
+    let placeholder = elem.getAttribute("placeholder");
+    placeholder !== ""
+      ? (elem.textContent = placeholder)
+      : (elem.textContent = "You've got the mic");
+  });
+}
 
 async function storePostRemotely() {
   let res;
@@ -82,11 +99,13 @@ async function storePostRemotely() {
   return res;
 }
 
-btnsRichTextEls.forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    triggerRichTextOperationFor(btn);
-  });
-});
+/*
+
+=====================
+METHODS : RICH TEXT OPTIONS LOGIC
+=====================
+
+*/
 
 function triggerRichTextOperationFor(eventTarget) {
   let richTextButtonState = {
@@ -125,6 +144,12 @@ function triggerRichTextOperationFor(eventTarget) {
   }
 }
 
+function checkForOpenRichTextClasses() {
+  return Array.from(btnsRichTextEls).filter(
+    (btnEl) => btnEl.getAttribute("data-is-active") === "true"
+  );
+}
+
 function openRichTextPortion(cssClass) {
   console.log("opening rich text tags");
   console.log("active classes", checkForOpenRichTextClasses());
@@ -135,49 +160,17 @@ function closeRichTextPortion(cssClass) {
   console.log("active classes", checkForOpenRichTextClasses());
 }
 
-function checkForOpenRichTextClasses() {
-  return Array.from(btnsRichTextEls).filter(
-    (btnEl) => btnEl.getAttribute("data-is-active") === "true"
-  );
-}
+/*
 
-async function init() {
-  let pageElements = [divPostTitleEl, divPostBodyEl];
+=====================
+EVENT LISTENERS
+=====================
 
-  Navbar.toggleDarkModeClassesOnElements(
-    Navbar.checkCurrentDarkModeStatus(),
-    pageElements
-  );
-
-  if (!userHasCredentials()) {
-    enableGuestMode();
-  }
-
-  let storedPost = await recallPostFromLocalStorage();
-  if (storedPost) {
-    let { postTitle, postBody } = storedPost;
-    divPostTitleEl.textContent = postTitle;
-    divPostBodyEl.innerHTML = postBody;
-  }
-
-  if (!storedPost) {
-    setDefaultPostFieldValues(divPostTitleEl, divPostBodyEl);
-    console.log("no local post found, using placeholders instead");
-  }
-}
+*/
 
 window.addEventListener("DOMContentLoaded", async () => {
   await init();
 });
-
-function setDefaultPostFieldValues(...elements) {
-  elements.forEach((elem) => {
-    let placeholder = elem.getAttribute("placeholder");
-    placeholder !== ""
-      ? (elem.textContent = placeholder)
-      : (elem.textContent = "You've got the mic");
-  });
-}
 
 window.addEventListener("richTextBtnEnabled", (e) => {
   openRichTextPortion(e.detail);
@@ -235,6 +228,12 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+btnsRichTextEls.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    triggerRichTextOperationFor(btn);
+  });
+});
+
 divPostBodyEl.addEventListener("input", (e) => {
   let typingTimer;
   let payload;
@@ -263,6 +262,25 @@ divPostBodyEl.addEventListener("input", (e) => {
     }, 1000);
   });
 });
+
+btnSubmitEl.addEventListener("click", async (e) => {
+  if (JSON.parse(window.location.getItem("userMode")) === "guest") {
+    return;
+  }
+  try {
+    await storePostRemotely();
+  } catch (e) {
+    console.error("Error caught, failed to save post to remote server", e);
+  }
+});
+
+/*
+
+=====================
+LOCAL STORAGE METHODS (MODULIZE THESE)
+=====================
+
+*/
 
 async function writeToLocalStorage(dataToSave) {
   if (window.localStorage) {
@@ -310,11 +328,3 @@ async function recallPostFromLocalStorage(postID = defaultPostID) {
   }
 }
 
-function displaySaveNoticeInDOM() {
-  console.log("displaying saving notification");
-
-  let notification = document.createElement("span");
-  notification.textContent = "Saving...";
-  notification.classList.add("notification__displaying");
-  document.querySelector("#container__page").appendChild(notification);
-}
