@@ -1,4 +1,5 @@
 import * as Navbar from "../scripts/navbar.js";
+import * as LocalStore from "./localStore.js";
 
 const darkModeToggleEl = document.getElementById("btn__dark__mode__toggle");
 
@@ -14,7 +15,7 @@ async function init() {
   Navbar.toggleDarkModeClassesOnElements();
   Navbar.checkCurrentCredentials();
 
-  let storedPost = await recallPostFromLocalStorage();
+  let storedPost = await LocalStore.recallPostFromLocalStorage();
   if (storedPost) {
     let { postTitle, postBody } = storedPost;
     divPostTitleEl.textContent = postTitle;
@@ -43,7 +44,6 @@ function displaySaveNoticeInDOM() {
   notification.classList.add("notification__displaying");
   document.querySelector("#container__page").appendChild(notification);
 }
-
 
 function setDefaultPostFieldValues(...elements) {
   elements.forEach((elem) => {
@@ -78,7 +78,7 @@ async function storePostRemotely() {
 
         console.log("post created, id is", postId);
         console.log("page created, html is", pageHTML);
-        await writeToLocalStorage({ ...postToSave, postId: postId });
+        await LocalStore.writeToLocalStorage({ ...postToSave, postId: postId });
       }
     } else if (postToSave && postId) {
       let updateURLPath = `${window.location.host}/api/${postId}`;
@@ -258,7 +258,7 @@ divPostBodyEl.addEventListener("input", (e) => {
             ? divPostBodyEl.getAttribute("placeholder")
             : divPostBodyEl.innerHTML,
       };
-      await writeToLocalStorage(payload);
+      await LocalStore.writeToLocalStorage(payload);
     }, 1000);
   });
 });
@@ -273,58 +273,3 @@ btnSubmitEl.addEventListener("click", async (e) => {
     console.error("Error caught, failed to save post to remote server", e);
   }
 });
-
-/*
-
-=====================
-LOCAL STORAGE METHODS (MODULIZE THESE)
-=====================
-
-*/
-
-async function writeToLocalStorage(dataToSave) {
-  if (window.localStorage) {
-    {
-      try {
-        let { postTitle, postBody, postId } = dataToSave;
-
-        if (postId !== defaultPostID) {
-          window.localStorage.removeItem("postData")[defaultPostID];
-        }
-
-        let postObj = {};
-
-        postObj[postId] = {
-          postTitle: postTitle,
-          postBody: postBody,
-        };
-
-        let JSONifiedData = JSON.stringify(postObj);
-
-        displaySaveNoticeInDOM();
-        console.log("saving data of post in local storage", JSONifiedData);
-        window.localStorage.setItem("postData", JSONifiedData);
-        console.log("post data written successfully");
-      } catch (e) {
-        console.error("could not store in local storage", e);
-      }
-    }
-  } else {
-    return;
-  }
-}
-
-async function recallPostFromLocalStorage(postID = defaultPostID) {
-  if (window.localStorage) {
-    let retrievedPostLocal = window.localStorage.getItem("postData");
-
-    if (retrievedPostLocal) {
-      let post = JSON.parse(retrievedPostLocal)[postID];
-
-      return post;
-    }
-  } else {
-    return;
-  }
-}
-
