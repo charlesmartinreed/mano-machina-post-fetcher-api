@@ -1,3 +1,5 @@
+const defaultPostID = "0123456789";
+
 async function writeToLocalStorage(dataToSave) {
   if (window.localStorage) {
     {

@@ -5,11 +5,10 @@ const darkModeToggleEl = document.getElementById("btn__dark__mode__toggle");
 
 const divPostTitleEl = document.querySelector("#div__post__title");
 const divPostBodyEl = document.querySelector("#div__post__body");
-const btnSubmitEl = document.querySelector("#submit__post__button");
+const btnSubmitEl = document.querySelector("#btn__publish__post");
 const btnsRichTextEls = document.querySelectorAll(".btn__richtext__ui");
 
 let pressedKeys = [];
-const defaultPostID = "0123456789";
 
 async function init() {
   Navbar.toggleDarkModeClassesOnElements();

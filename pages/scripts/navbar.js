@@ -28,7 +28,11 @@ function enableGuestMode() {
     }
   }
 
-  document.getElementById("nav__username__field").textContent = "Guest Mode";
+  let userpageLinkEl = document.getElementById("navbar__userpage__link");
+
+  userpageLinkEl.textContent = "Guest Mode";
+  userpageLinkEl.setAttribute("href", "#");
+  document.getElementById("btn__publish__post").disabled = "true";
 }
 
 function checkCurrentDarkModeStatus() {
