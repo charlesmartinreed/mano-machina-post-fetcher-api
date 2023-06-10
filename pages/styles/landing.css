@@ -34,6 +34,20 @@
   width: 50%;
 }
 
+.container__login__buttons::after {
+  content: "In Guest Mode, your posts are only stored locally.";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: inherit;
+  text-align: center;
+  font-size: 0.9em;
+  width: 200px;
+  height: 50px;
+  font-style: italic;
+}
+
 .container__login__buttons .btn {
   border-radius: 3px;
   padding: 0.25rem 0.5rem;
