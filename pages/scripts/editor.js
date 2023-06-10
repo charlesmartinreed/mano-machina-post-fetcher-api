@@ -13,6 +13,7 @@ let pressedKeys = [];
 async function init() {
   Navbar.toggleDarkModeClassesOnElements();
   Navbar.checkCurrentCredentials();
+  Navbar.createUserPostsLink();
 
   let storedPost = await LocalStore.recallPostFromLocalStorage();
   if (storedPost) {

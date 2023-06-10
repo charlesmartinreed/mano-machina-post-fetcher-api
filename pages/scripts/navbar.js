@@ -35,6 +35,21 @@ function enableGuestMode() {
   document.getElementById("btn__publish__post").disabled = "true";
 }
 
+function createUserPostsLink() {
+  let user = "testUser";
+
+  let navItem = document.createElement("li");
+  navItem.classList.add("navbar__item");
+
+  let navLink = document.createElement("a");
+  navLink.id = "navbar__userposts__link";
+  navLink.textContent = "Your Posts";
+  navLink.href = `${window.location}/${user}/posts`;
+
+  navItem.appendChild(navLink);
+  document.querySelector(".navbar__items").appendChild(navItem);
+}
+
 function checkCurrentDarkModeStatus() {
   if (!window.localStorage) return undefined;
 
@@ -151,4 +166,5 @@ export {
   toggleDarkModeClassesOnElements,
   systemDarkModePrefChanged,
   checkCurrentCredentials,
+  createUserPostsLink,
 };
