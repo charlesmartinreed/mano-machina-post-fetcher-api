@@ -49,4 +49,23 @@ function generateValues(len = 10, permitSpecialChars = false) {
   return genned;
 }
 
-export {};
+function generatePostID() {
+  let postIDArr = [...generateValues(20, false)];
+  let slicedArr = [];
+  let lastIndex = 0;
+
+  for (let i = 0; i <= postIDArr.length; i++) {
+    if (i > 0 && i % 4 === 0) {
+      slicedArr.push(postIDArr.slice(lastIndex, i));
+      lastIndex = i;
+    }
+  }
+
+  return slicedArr.map((arr) => arr.join("")).join("-");
+}
+
+function generateUserID() {
+  return generateValues(14, false);
+}
+
+export { generateUserID, generatePostID };
