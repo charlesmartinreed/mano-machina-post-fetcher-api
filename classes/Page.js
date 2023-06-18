@@ -1,19 +1,19 @@
-const htmlSkeleton = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
-`;
+// const htmlSkeleton = `
+// <!DOCTYPE html>
+// <html lang="en">
+// <head>
+//     <meta charset="UTF-8">
+//     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//     <title>Document</title>
+// </head>
+// <body>
 
-module.exports = class Page {
+// </body>
+// </html>
+// `;
+
+export class Page {
   constructor(postTitle, postBody, cssStyles, jsScripts) {
     this.postTitle = postTitle;
     this.postBody = postBody;
@@ -90,4 +90,4 @@ module.exports = class Page {
   html = () => this.#composeHTML();
   // styles = this.cssStyles;
   // title = this.postTitle;
-};
+}

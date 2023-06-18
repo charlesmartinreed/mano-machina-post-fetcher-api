@@ -1,10 +1,22 @@
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const Post = require("../classes/Post");
-const Page = require("../classes/Page");
+import { Post } from "../classes/Post.js";
+import { Page } from "../classes/Page.js";
 
+import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
+import cors from "cors";
+
+import { createClient } from "@supabase/supabase-js";
+
+const app = express();
 const PORT = process.env.PORT || 7000;
+
+const supabase = createClient(
+  process.env.SUPABASE_DB_URL,
+  process.env.SUPABASE_API_KEY
+);
+
 app.use(express.static("pages"));
 app.use(express.json());
 app.use(cors());
@@ -71,4 +83,17 @@ async function storeNewPost(req) {
   return { createdPost, createdPage };
 }
 
-app.listen(PORT, () => console.log(`Server now running on PORT ${PORT}`));
+async function connectToDB() {
+  try {
+    const { data, error } = await supabase.from("Posts").select();
+    if (data) console.log("connected to DB succesfully!");
+    if (error) throw new Error(error);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+app.listen(PORT, async () => {
+  await connectToDB();
+  console.log(`Server now running on PORT ${PORT}`);
+});

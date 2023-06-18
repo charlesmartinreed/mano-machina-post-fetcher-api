@@ -1,4 +1,4 @@
-module.exports = class Post {
+export class Post {
   constructor(postTitle, postBody) {
     this.postTitle = postTitle;
     this.postBody = postBody;
@@ -57,4 +57,4 @@ module.exports = class Post {
 
     return `${rawDate.day}day, ${rawDate.month} ${rawDate.date}, ${rawDate.year}, ${rawDate.time}`;
   }
-};
+}

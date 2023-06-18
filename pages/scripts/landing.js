@@ -41,7 +41,6 @@ function updateLocalStorage(key, value) {
 }
 
 function moveToNewPage(newLocation) {
-  //   console.log(newLocation);
   window.location.href = newLocation;
 }
 
