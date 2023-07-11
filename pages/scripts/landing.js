@@ -10,7 +10,7 @@ async function initGuestMode() {
   let searchParams = new URLSearchParams({
     userMode: "guest",
   });
-  let URL = `http://${window.location.host}/editor/${searchParams}`;
+  let URL = `https://${window.location.host}/editor/${searchParams}`;
 
   try {
     updateLocalStorage("userMode", "guest");
